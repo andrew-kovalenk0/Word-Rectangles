@@ -28,6 +28,7 @@ if __name__ == '__main__':
             data = np.append(data, [[cX, cY]], axis=0)
 
     # ------------Kmeans clustering------------
+    data[:, 0] = data[:, 0] / 25
     k = 17
     n = data.shape[0]
     c = data.shape[1]
@@ -46,7 +47,11 @@ if __name__ == '__main__':
         clusters = np.argmin(distances, axis=1)
         centers_old = centers_new.copy()
         for i in range(k):
-            centers_new[i] = np.mean(data[clusters == i], axis=0)
+            if not data[clusters == i].any():
+                centers_new[i] = centers_old[i]
+            else:
+                centers_new[i] = np.mean(data[clusters == i], axis=0)
+
         error = np.linalg.norm(centers_new - centers_old)
 
     # ------------Colors for rectangles------------
